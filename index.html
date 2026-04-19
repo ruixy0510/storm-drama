@@ -2,15 +2,270 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ШТОРМ ДРАМА</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a26;--accent:#e63946;--accent2:#ff6b6b;--gold:#ffd166;--text:#f0f0f5;--muted:#8888aa;--border:rgba(255,255,255,0.07);--card:#13131e}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a26;--ac:#e63946;--ac2:#ff6b6b;--gold:#ffd166;--tx:#f0f0f5;--mt:#8888aa;--bd:rgba(255,255,255,0.07);--cd:#13131e}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;overflow-x:hidden}
-/* HEADER */
-header{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(to bottom,rgba(10,10,15,0.97) 80%,transparent);padding:0 48px;transition:background .3s}
-.htop{display:flex;align-items:center;gap:24px;padding:14px 0;border-bottom:1px solid var(--border)}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0;cursor:pointer}
-.lbox{width:32px;height:32px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+body{background:var(--bg);color:var(--tx);font-family:'Noto Sans',sans-serif;overflow-x:hidden}
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(to bottom,rgba(10,10,15,.97) 80%,transparent);padding:0 40px;transition:background .3s}
+.ht{display:flex;align-items:center;gap:20px;padding:13px 0;border-bottom:1px solid var(--bd)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--ac);text-decoration:none;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer}
+.lb{width:30px;height:30px;background:var(--ac);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff}
+.hn{display:flex;gap:2px}
+.hn a{color:var(--mt);text-decoration:none;font-size:12px;padding:6px 12px;border-radius:6px;transition:all .2s;white-space:nowrap;cursor:pointer}
+.hn a:hover,.hn a.on{color:var(--tx);background:var(--bg3)}
+.hr{display:flex;align-items:center;gap:10px;margin-left:auto}
+.sb{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--bd);border-radius:7px;padding:7px 12px;width:190px;transition:border .2s}
+.sb:focus-within{border-color:var(--ac)}
+.sb input{background:none;border:none;outline:none;color:var(--tx);font-size:12px;width:100%}
+.sb input::placeholder{color:var(--mt)}
+.bl{background:var(--ac);color:#fff;border:none;border-radius:7px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.bl:hover{background:var(--ac2)}
+.ua{width:32px;height:32px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer;position:relative;flex-shrink:0}
+.ud{position:absolute;top:40px;right:0;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:8px;min-width:170px;display:none;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.ud.open{display:block}
+.un{font-size:11px;color:var(--mt);padding:4px 10px 8px;border-bottom:1px solid var(--bd);margin-bottom:4px}
+.ud a{display:block;color:var(--tx);font-size:12px;padding:7px 10px;border-radius:6px;cursor:pointer}
+.ud a:hover{background:var(--bg3)}
+.sn{display:flex;gap:32px;padding:9px 0}
+.sn a{color:var(--mt);text-decoration:none;font-size:12px;font-weight:600;padding-bottom:7px;border-bottom:2px solid transparent;transition:all .2s;cursor:pointer}
+.sn a:hover,.sn a.on{color:var(--tx);border-bottom-color:var(--ac)}
+.hero{margin-top:100px;position:relative;height:540px;overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .9s}
+.slide.on{opacity:1}
+.sbg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.42);transition:transform 8s ease}
+.slide.on .sbg{transform:scale(1.05)}
+.sg{position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,15,.95) 28%,rgba(10,10,15,.2) 72%),linear-gradient(to top,rgba(10,10,15,.92) 12%,transparent 52%)}
+.sc{position:absolute;bottom:80px;left:70px;max-width:460px}
+.badge{display:inline-flex;align-items:center;background:var(--ac);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:4px;letter-spacing:1.5px;margin-bottom:12px}
+.st{font-family:'Bebas Neue',sans-serif;font-size:60px;line-height:1;letter-spacing:2px;margin-bottom:12px}
+.sm{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mt);margin-bottom:14px;flex-wrap:wrap}
+.ep{background:var(--gold);color:#000;font-weight:800;padding:2px 8px;border-radius:4px;font-size:10px}
+.sd{font-size:13px;color:rgba(240,240,245,.7);line-height:1.7;margin-bottom:24px}
+.sbt{display:flex;gap:10px}
+.bp{display:flex;align-items:center;gap:7px;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:12px 26px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.bp:hover{background:var(--ac2);transform:translateY(-2px)}
+.ba{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:12px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.ba:hover{background:rgba(255,255,255,.18)}
+.dots{position:absolute;bottom:26px;left:70px;display:flex;gap:7px}
+.dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.28);cursor:pointer;transition:all .35s}
+.dot.on{width:24px;background:var(--ac)}
+main{padding:0 40px 70px}
+.sec{margin:48px 0}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.tt{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;display:flex;align-items:center;gap:8px}
+.tt::before{content:'';width:4px;height:20px;background:var(--ac);border-radius:2px;display:block}
+.sa{color:var(--mt);text-decoration:none;font-size:12px;cursor:pointer}
+.sa:hover{color:var(--ac)}
+.ft{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
+.ftb{padding:6px 16px;border-radius:18px;border:1px solid var(--bd);background:transparent;color:var(--mt);font-size:12px;cursor:pointer;transition:all .2s}
+.ftb:hover,.ftb.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+.card{background:var(--cd);border-radius:9px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;position:relative}
+.card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 18px 36px rgba(0,0,0,.55);z-index:2}
+.ci{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;font-size:40px}
+.ce{position:absolute;top:7px;left:7px;background:rgba(10,10,15,.88);color:var(--tx);font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px}
+.cy{position:absolute;top:7px;right:7px;background:rgba(230,57,70,.92);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px}
+.eb{position:absolute;bottom:40px;left:0;right:0;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;font-size:9px;font-weight:800;padding:3px 7px;letter-spacing:1.5px;text-align:center}
+.cf{padding:9px}
+.cn{font-size:11px;font-weight:600;color:var(--tx);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cr{font-size:10px;color:var(--gold);margin-top:3px}
+.sr{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.sr::-webkit-scrollbar{display:none}
+.sr .card{flex:0 0 148px}
+.sub{background:linear-gradient(135deg,#1c0a10,#280d1c,#150b20);border:1px solid rgba(230,57,70,.25);border-radius:16px;padding:40px 48px;display:flex;align-items:center;justify-content:space-between;gap:28px;position:relative;overflow:hidden;margin:48px 0}
+.st2{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;margin-bottom:6px}
+.sd2{color:var(--mt);font-size:13px;line-height:1.6}
+.pl{display:flex;gap:12px;flex-shrink:0}
+.pln{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:18px 24px;text-align:center;min-width:120px;cursor:pointer;transition:all .25s}
+.pln:hover,.pln.h{border-color:var(--ac);background:rgba(230,57,70,.09)}
+.pln.h{transform:scale(1.06)}
+.pn{font-size:11px;color:var(--mt);margin-bottom:5px}
+.pp{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold)}
+.pu{font-size:10px;color:var(--mt);margin-top:2px}
+footer{background:var(--bg2);border-top:1px solid var(--bd);padding:40px 40px 24px}
+.fr{display:flex;gap:48px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px}
+.fl{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ac);letter-spacing:3px;margin-bottom:8px}
+.fd{color:var(--mt);font-size:12px;max-width:240px;line-height:1.7}
+.fc h4{font-size:12px;font-weight:700;margin-bottom:14px}
+.fc a{display:block;color:var(--mt);text-decoration:none;font-size:12px;margin-bottom:8px;cursor:pointer}
+.fc a:hover{color:var(--ac)}
+.fb{border-top:1px solid var(--bd);padding-top:18px;text-align:center;color:var(--mt);font-size:11px}
+/* LOGIN */
+.lm{position:fixed;inset:0;z-index:1001;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.lm.open{opacity:1;pointer-events:all}
+.lo{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px)}
+.lbx{position:relative;background:var(--bg2);border:1px solid var(--bd);border-radius:18px;padding:36px;width:400px;z-index:1;transform:scale(.95);transition:transform .3s}
+.lm.open .lbx{transform:scale(1)}
+.ll{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ac);letter-spacing:3px;text-align:center;margin-bottom:6px}
+.ls{text-align:center;color:var(--mt);font-size:12px;margin-bottom:20px}
+.lts{display:flex;margin-bottom:20px;border-radius:7px;overflow:hidden;border:1px solid var(--bd)}
+.lt{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--mt)}
+.lt.on{background:var(--ac);color:#fff}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--bd);border-radius:7px;padding:11px 13px;color:var(--tx);font-size:13px;outline:none;margin-bottom:10px;transition:border .2s}
+.fi:focus{border-color:var(--ac)}
+.fi::placeholder{color:var(--mt)}
+.fb2{width:100%;background:var(--ac);color:#fff;border:none;border-radius:7px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:2px}
+.fb2:hover{background:var(--ac2)}
+.fb2:disabled{opacity:.6;cursor:not-allowed}
+.lc{position:absolute;top:14px;right:14px;background:var(--bg3);color:var(--mt);border:none;width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.le{color:#f87171;font-size:11px;margin-bottom:8px;text-align:center;min-height:16px}
+/* PLAYER */
+.pm{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.pm.open{opacity:1;pointer-events:all}
+.pw{position:relative;width:88%;max-width:960px;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden}
+.pph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(135deg,#0a0a1a,#1a0a1a)}
+.pb{width:76px;height:76px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:transform .2s}
+.pb:hover{transform:scale(1.08)}
+.ptl{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px}
+.psu{color:var(--mt);font-size:12px}
+.pc{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.6);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pc:hover{background:var(--ac)}
+/* SEARCH */
+.sov{position:fixed;top:100px;left:0;right:0;bottom:0;z-index:200;background:rgba(10,10,15,.97);overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s;padding:28px 40px}
+.sov.open{opacity:1;pointer-events:all}
+.sovt{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;margin-bottom:18px;color:var(--mt)}
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(18px);background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:11px 22px;border-radius:9px;font-size:13px;z-index:2000;opacity:0;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:var(--ac);color:var(--ac)}
+</style>
+</head>
+<body>
+<header id="hdr">
+<div class="ht">
+<a class="logo" onclick="goHome()"><div class="lb">&#9654;</div>ШТОРМ ДРАМА</a>
+<nav class="hn">
+<a class="on" onclick="goHome()">Нүүр хуудас</a>
+<a onclick="toast2('Удахгүй нэмэгдэнэ!',0)">Багц үзэр</a>
+<a onclick="toast2('Удахгүй нэмэгдэнэ!',0)">Кино</a>
+<a onclick="toast2('Удахгүй нэмэгдэнэ!',0)">Дан үзэр</a>
+</nav>
+<div class="hr">
+<div class="sb"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input id="si" placeholder="Хайх..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')closeSearch()"></div>
+<div id="authArea"></div>
+</div>
+</div>
+<nav class="sn">
+<a class="on">Нэг ангит кино</a>
+<a onclick="toast2('Удахгүй!',0)">Сабскрипшн</a>
+<a onclick="toast2('Удахгүй!',0)">Эксперт</a>
+</nav>
+</header>
+
+<div class="hero">
+<div class="slide on"><div class="sbg" style="background-image:url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1600&q=80')"></div><div class="sg"></div><div class="sc"><div class="badge">&#9889; ШИНЭ ЭПИЗОД</div><div class="st">Сүнсний<br>Хуульч</div><div class="sm"><span class="ep">24 ЭП</span><span>2025</span><span>&bull;</span><span>&#9733; 9.2</span></div><p class="sd">Нэгэн залуу хуульч сүнснүүдийг харах онцгой чадвартай болж...</p><div class="sbt"><button class="bp" onclick="openPlayer('Сүнсний Хуульч')">&#9654; Одоо үзэх</button><button class="ba" onclick="openLogin()">+ Жагсаалт</button></div></div></div>
+<div class="slide"><div class="sbg" style="background-image:url('https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1600&q=80')"></div><div class="sg"></div><div class="sc"><div class="badge">&#128293; ШИЛДЭГ</div><div class="st">Захирагчийн<br>Эхнэр</div><div class="sm"><span class="ep">36 ЭП</span><span>2025</span><span>&bull;</span><span>&#9733; 8.8</span></div><p class="sd">Хааны ордонд амьдардаг охин захирагчийн эхнэр болно...</p><div class="sbt"><button class="bp" onclick="openPlayer('Захирагчийн Эхнэр')">&#9654; Одоо үзэх</button><button class="ba" onclick="openLogin()">+ Жагсаалт</button></div></div></div>
+<div class="slide"><div class="sbg" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80')"></div><div class="sg"></div><div class="sc"><div class="badge">&#10025; TOP 1</div><div class="st">Чихэрлэг<br>Хайр</div><div class="sm"><span class="ep">18 ЭП</span><span>2025</span><span>&bull;</span><span>&#9733; 9.5</span></div><p class="sd">Хоёр дайсан оюутан нэг байранд амьдрах болно...</p><div class="sbt"><button class="bp" onclick="openPlayer('Чихэрлэг Хайр')">&#9654; Одоо үзэх</button><button class="ba" onclick="openLogin()">+ Жагсаалт</button></div></div></div>
+<div class="dots"><div class="dot on" onclick="go(0)"></div><div class="dot" onclick="go(1)"></div><div class="dot" onclick="go(2)"></div></div>
+</div>
+
+<main>
+<div class="sec"><div class="sh"><div class="tt">ШИНЭ ДРАМАНУУД</div><a class="sa">Бүгдийг харах &#8594;</a></div>
+<div class="ft"><button class="ftb on" onclick="ft(this,'all')">Бүгд</button><button class="ftb" onclick="ft(this,'romantic')">Романтик</button><button class="ftb" onclick="ft(this,'historical')">Түүхэн</button><button class="ftb" onclick="ft(this,'comedy')">Хошин</button><button class="ftb" onclick="ft(this,'mystic')">Мистик</button></div>
+<div class="grid" id="g1"></div></div>
+<div class="sec"><div class="sh"><div class="tt">&#128293; ХИТ ДРАМАНУУД</div></div><div class="sr" id="g2"></div></div>
+<div class="sub"><div><div class="st2">ЭКСПЕРТ БОЛООРОЙ</div><div class="sd2">Бүх шинэ драмыг хязгааргүй үзэж exclusive контентэд нэвтрэх эрх авах</div></div>
+<div class="pl"><div class="pln" onclick="openLogin()"><div class="pn">7 ХОНОГ</div><div class="pp">4,900</div><div class="pu">&#8366;/7 хоног</div></div><div class="pln h" onclick="openLogin()"><div class="pn">&#11088; САРЫН</div><div class="pp">14,900</div><div class="pu">&#8366;/сар</div></div><div class="pln" onclick="openLogin()"><div class="pn">ЖИЛИЙН</div><div class="pp">99,000</div><div class="pu">&#8366;/жил</div></div></div></div>
+<div class="sec"><div class="sh"><div class="tt">&#128197; УДАХГҮЙ ГАРАХ</div></div><div class="sr" id="g3"></div></div>
+</main>
+
+<footer><div class="fr">
+<div><div class="fl">&#9654; ШТОРМ ДРАМА</div><div class="fd">Монголын тэргүүлэх short drama платформ. Хятад, Солонгос, Японы шилдэг драмануудыг монгол хэл дээр үзэх боломж.</div></div>
+<div class="fc"><h4>ПЛАТФОРМ</h4><a onclick="goHome()">Нүүр хуудас</a><a>Шинэ нэмэлт</a><a>Хит жагсаалт</a></div>
+<div class="fc"><h4>АНГИЛАЛ</h4><a>Романтик</a><a>Түүхэн</a><a>Мистик</a></div>
+<div class="fc"><h4>ТУСЛАМЖ</h4><a>Холбоо барих</a><a>FAQ</a></div>
+</div><div class="fb">&copy; 2025 Шторм Драма. Бүх эрх хуулиар хамгаалагдсан.</div></footer>
+
+<div class="lm" id="lm"><div class="lo" onclick="closeLogin()"></div><div class="lbx"><button class="lc" onclick="closeLogin()">&#10005;</button><div class="ll">&#9654; ШТОРМ ДРАМА</div><div class="ls">Нэвтэрч хязгааргүй үзэх боломжтой болоорой</div><div class="lts"><div class="lt on" onclick="setLT(this,'in')">Нэвтрэх</div><div class="lt" onclick="setLT(this,'up')">Бүртгүүлэх</div></div><div id="em" class="le"></div><div id="lf"><input class="fi" type="email" placeholder="И-мэйл хаяг" id="le"><input class="fi" type="password" placeholder="Нууц үг" id="lp"><button class="fb2" id="lb" onclick="doLogin()">Нэвтрэх</button></div><div id="rf" style="display:none"><input class="fi" type="text" placeholder="Нэр" id="rn"><input class="fi" type="email" placeholder="И-мэйл хаяг" id="re"><input class="fi" type="password" placeholder="Нууц үг (6+ тэмдэгт)" id="rp"><button class="fb2" id="rb" onclick="doRegister()">Бүртгүүлэх</button></div></div></div>
+
+<div class="pm" id="pm"><div class="pw"><button class="pc" onclick="closePM()">&#10005;</button><div class="pph"><div class="pb">&#9654;</div><div class="ptl" id="ptl"></div><div class="psu">Үнэгүй Preview &mdash; Бүрэн үзэхийн тулд Эксперт болоорой</div></div></div></div>
+
+<div class="sov" id="sov"><div class="sovt" id="sovt">Хайлтын үр дүн</div><div class="grid" id="sg"></div></div>
+<div class="toast" id="t"></div>
+
+<script>
+const SU='https://nwkknpdhmlkvrfdbwjvc.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53a2tucGRobWxrdnJmZGJ3anZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTExMjEsImV4cCI6MjA5MjE2NzEyMX0.1OAvCM5FLzmlhWxqmKNfIpbPgvGX0trNW8WGv3P4Svg';
+const sb=supabase.createClient(SU,SK);
+var dramas=[
+{id:1,n:'Дэлгүй нөхрөө...',e:'0ЭП',y:'2025',g:'linear-gradient(135deg,#1a0a20,#3d1a5c)',i:'&#128081;',x:1,cat:'romantic',r:9.1},
+{id:2,n:'Захирагчийн эхнэр',e:'3ЭП',y:'2025',g:'linear-gradient(135deg,#0d1a2e,#1e3a5c)',i:'&#127800;',x:1,cat:'historical',r:8.8},
+{id:3,n:'Сэтгэл зүрхээ дага',e:'1ЭП',y:'2025',g:'linear-gradient(135deg,#1a0d0a,#3d1e14)',i:'&#128149;',x:1,cat:'romantic',r:9.3},
+{id:4,n:'Ханхүүгийн эхнэр',e:'0ЭП',y:'2025',g:'linear-gradient(135deg,#0a1a10,#14381e)',i:'&#127983;',x:1,cat:'historical',r:8.5},
+{id:5,n:'Чихэрлэг хайр',e:'2ЭП',y:'2025',g:'linear-gradient(135deg,#1a0a14,#3d1428)',i:'&#127802;',x:1,cat:'comedy',r:9.5},
+{id:6,n:'Төгс ханхуу',e:'3ЭП',y:'2025',g:'linear-gradient(135deg,#0d0d1a,#1e1e40)',i:'&#9876;',x:1,cat:'historical',r:8.7},
+{id:7,n:'Нууц ордон',e:'1ЭП',y:'2025',g:'linear-gradient(135deg,#1a1000,#3d2800)',i:'&#127984;',x:0,cat:'mystic',r:8.2},
+{id:8,n:'Мөнгөн дуун',e:'2ЭП',y:'2025',g:'linear-gradient(135deg,#001a1a,#003d3d)',i:'&#127754;',x:0,cat:'romantic',r:8.9},
+{id:9,n:'Хааны нулимс',e:'5ЭП',y:'2025',g:'linear-gradient(135deg,#200a0a,#4d1414)',i:'&#128120;',x:1,cat:'historical',r:9.0},
+{id:10,n:'Гэгээн зам',e:'2ЭП',y:'2025',g:'linear-gradient(135deg,#0a1020,#142040)',i:'&#10024;',x:0,cat:'mystic',r:8.4},
+{id:11,n:'Хайрын тангараг',e:'8ЭП',y:'2025',g:'linear-gradient(135deg,#1a0a18,#3d1438)',i:'&#128142;',x:0,cat:'romantic',r:8.6},
+{id:12,n:'Буцаж ирсэн',e:'3ЭП',y:'2025',g:'linear-gradient(135deg,#0d1a0d,#1e3d1e)',i:'&#127807;',x:0,cat:'romantic',r:8.3},
+{id:13,n:'Мартагдсан амлалт',e:'0ЭП',y:'2025',g:'linear-gradient(135deg,#200d00,#4d2000)',i:'&#128257;',x:0,cat:'romantic',r:0},
+{id:14,n:'Цэнхэр нуур',e:'0ЭП',y:'2025',g:'linear-gradient(135deg,#001020,#002040)',i:'&#127769;',x:0,cat:'mystic',r:0},
+{id:15,n:'Алтан гинж',e:'0ЭП',y:'2025',g:'linear-gradient(135deg,#1a1400,#403200)',i:'&#127942;',x:0,cat:'historical',r:0},
+];
+var cur=null,cs=0;
+
+sb.auth.onAuthStateChange(function(ev,sess){
+  cur=sess?sess.user:null; rAuth();
+  if(ev==='SIGNED_IN'){closeLogin();toast2('Тавтай морил, '+(cur.user_metadata.name||cur.email.split('@')[0])+'!',1);}
+  if(ev==='SIGNED_OUT')toast2('Гарлаа',0);
+});
+
+function rAuth(){
+  var a=document.getElementById('authArea');
+  if(cur){
+    var n=cur.user_metadata.name||cur.email.split('@')[0];
+    a.innerHTML='<div class="ua" onclick="toggleDrop()" id="ua">'+n[0].toUpperCase()+'<div class="ud" id="ud"><div class="un">'+n+'<br><span style="font-size:10px">'+cur.email+'</span></div><a onclick="closeDrop();toast2('Удахгүй!',0)">&#128197; Миний жагсаалт</a><a onclick="doLogout()">&#8594; Гарах</a></div></div>';
+  } else {
+    a.innerHTML='<button class="bl" onclick="openLogin()">&#8594; Нэвтрэх</button>';
+  }
+}
+function toggleDrop(){var d=document.getElementById('ud');if(d)d.classList.toggle('open');}
+function closeDrop(){var d=document.getElementById('ud');if(d)d.classList.remove('open');}
+document.addEventListener('click',function(e){if(!e.target.closest('#ua'))closeDrop();});
+
+async function doLogin(){
+  var e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value;
+  if(!e||!p){setE('И-мэйл болон нууц үгээ оруулна уу!');return;}
+  var b=document.getElementById('lb');b.disabled=1;b.textContent='Нэвтэрч байна...';
+  var r=await sb.auth.signInWithPassword({email:e,password:p});
+  b.disabled=0;b.textContent='Нэвтрэх';
+  if(r.error)setE(r.error.message==='Invalid login credentials'?'И-мэйл эсвэл нууц үг буруу байна!':r.error.message);
+}
+async function doRegister(){
+  var nm=document.getElementById('rn').value.trim(),e=document.getElementById('re').value.trim(),p=document.getElementById('rp').value;
+  if(!nm||!e||!p){setE('Бүх талбарыг бөглөнө үү!');return;}
+  if(p.length<6){setE('Нууц үг хамгийн багадаа 6 тэмдэгт байх ёстой!');return;}
+  var b=document.getElementById('rb');b.disabled=1;b.textContent='Бүртгэж байна...';
+  var r=await sb.auth.signUp({email:e,password:p,options:{data:{name:nm}}});
+  b.disabled=0;b.textContent='Бүртгүүлэх';
+  if(r.error){setE(r.error.message);}
+  else if(r.data.user&&!r.data.session){closeLogin();toast2('Баталгаажуулах имэйл илгээлээ: '+e,0);}
+}
+async function doLogout(){closeDrop();await sb.auth.signOut();}
+function setE(m){document.getElementById('em').textContent=m;}
+function openLogin(){document.getElementById('lm').classList.add('open');document.body.style.overflow='hidden';setE('');}
+function closeLogin(){document.getElementById('lm').classList.remove('open');document.body.style.overflow='';}
+function setLT(el,t){document.querySelectorAll('.lt').forEach(function(x){x.classList.remove('on');});el.classList.add('on');document.getElementById('lf').style.display=t==='in'?'block':'none';document.getElementById('rf').style.display=t==='up'?'block':'none';setE('');}
+function openPlayer(t){document.getElementById('ptl').textContent=t;document.getElementById('pm').classList.add('open');document.body.style.overflow='hidden';}
+function closePM(){document.getElementById('pm').classList.remove('open');document.body.style.overflow='';}
+function mk(c){return '<div class="card" onclick="openPlayer(''+c.n+'')"><div class="ci" style="background:'+c.g+'">'+c.i+'<div class="ce">'+c.e+'</div><div class="cy">'+c.y+'</div>'+(c.x?'<div class="eb">EXPERT</div>':'')+'</div><div class="cf"><div class="cn">'+c.n+'</div>'+(c.r?'<div class="cr">&#9733; '+c.r+'</div>':'<div class="cr" style="color:var(--mt)">Удахгүй</div>')+'</div></div>';}
+function rCards(){document.getElementById('g1').innerHTML=dramas.filter(function(d){return d.id<=8;}).map(mk).join('');document.getElementById('g2').innerHTML=dramas.filter(function(d){return d.id>=9&&d.id<=12;}).map(mk).join('');document.getElementById('g3').innerHTML=dramas.filter(function(d){return d.id>=13;}).map(mk).join('');}
+function ft(el,cat){document.querySelectorAll('.ftb').forEach(function(t){t.classList.remove('on');});el.classList.add('on');var d=cat==='all'?dramas.filter(function(d){return d.id<=8;}):dramas.filter(function(d){return d.cat===cat&&d.id<=8;});document.getElementById('g1').innerHTML=d.map(mk).join('');}
+function go(n){document.querySelectorAll('.slide').forEach(function(s,i){s.classList.toggle('on',i===n);});document.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===n);});cs=n;}
+setInterval(function(){go((cs+1)%3);},5000);
+function doSearch(v){var o=document.getElementById('sov');if(!v.trim()){o.classList.remove('open');return;}var res=dramas.filter(function(d){return d.n.toLowerCase().includes(v.toLowerCase());});document.getElementById('sovt').textContent='"'+v+'" — '+res.length+' үр дүн';document.getElementById('sg').innerHTML=res.length?res.map(mk).join(''):'<div style="color:var(--mt);padding:40px;text-align:center">Олдсонгүй</div>';o.classList.add('open');}
+function closeSearch(){document.getElementById('sov').classList.remove('open');document.getElementById('si').value='';}
+function goHome(){closeSearch();window.scrollTo({top:0,behavior:'smooth'});}
+function toast2(m,ok){var t=document.getElementById('t');t.textContent=m;t.className='toast'+(ok?' ok':'');setTimeout(function(){t.classList.add('show');},10);setTimeout(function(){t.classList.remove('show');},3500);}
+window.addEventListener('scroll',function(){document.getElementById('hdr').style.background=window.scrollY>50?'rgba(10,10,15,0.99)':'';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeLogin();closePM();closeSearch();}});
+rCards();rAuth();
+</script>
+</body>
+</html>
