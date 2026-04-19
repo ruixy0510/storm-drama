@@ -2,12 +2,15 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ШТОРМ ДРАМА</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:PLACEHOLDER}
-</style>
-</head>
-<body>
-WORKING
-</body>
-</html>
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a26;--accent:#e63946;--accent2:#ff6b6b;--gold:#ffd166;--text:#f0f0f5;--muted:#8888aa;--border:rgba(255,255,255,0.07);--card:#13131e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans',sans-serif;overflow-x:hidden}
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(to bottom,rgba(10,10,15,0.97) 80%,transparent);padding:0 48px;transition:background .3s}
+.htop{display:flex;align-items:center;gap:24px;padding:14px 0;border-bottom:1px solid var(--border)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0;cursor:pointer}
+.lbox{width:32px;height:32px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
